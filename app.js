@@ -17,18 +17,23 @@ const colors = [
 ];
 
 const onMove = (event) => {
-  ctx.beginPath();
-  ctx.moveTo(clickX, clickY);
-  const color = colors[Math.floor(Math.random() * colors.length)];
-  ctx.strokeStyle = color;
-  ctx.lineTo(event.offsetX, event.offsetY);
-  ctx.stroke();
+  if (isPainting) {
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    return;
+  }
+  ctx.moveTo(event.offsetX, event.offsetY);
 };
 
-const onClick = (event) => {
-  clickX = event.layerX;
-  clickY = event.layerY;
+const startPainting = () => {
+  isPainting = true;
+};
+
+const cancelPainting = () => {
+  isPainting = false;
 };
 
 canvas.addEventListener("mousemove", onMove);
-canvas.addEventListener("click", onClick);
+canvas.addEventListener("mousedown", startPainting);
+canvas.addEventListener("mouseup", cancelPainting);
+canvas.addEventListener("mouseleave", cancelPainting);
